@@ -18,5 +18,7 @@
     <ClInclude Include="DefaultLogger.h">
       <Filter>DefaultLogger</Filter>
     </ClInclude>
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="ConsoleLogger.h" />
   </ItemGroup>
 </Project>
