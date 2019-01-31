@@ -5,10 +5,18 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="DefaultLogger">
+      <UniqueIdentifier>{0ad306c7-ab91-4fdb-8461-8f2c20bd8bcf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>main</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DefaultLogger.h">
+      <Filter>DefaultLogger</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
