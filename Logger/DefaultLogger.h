@@ -3,22 +3,7 @@
 #include <fstream>
 #include <string>
 #include <mutex>
-
-template<typename OutStream, typename T>
-class FormatOutput final
-{
-private:
-    const T& ref_;
-    
-public:
-    FormatOutput(const T& obj) : ref_(obj) {}
-
-    friend OutStream& operator<<(OutStream& os, const FormatOutput<OutStream, T>& arg)
-    {
-        os << arg.ref_ << ' ';
-        return os;
-    }
-};
+#include "Utility.h"
 
 class DefaultLogger
 {
@@ -32,8 +17,8 @@ protected:
 
     DefaultLogger(const std::string& filename);
 
-    template<typename Format, typename... Types>
-    void write(Format& format, const Types&... args)
+    template<typename... Types>
+    void write(const Types&... args)
     {
         LockGuard guard(mtx_);
 
