@@ -15,10 +15,13 @@ private:
 protected:
     using LockGuard = std::lock_guard<std::mutex>;
 
-    DefaultLogger(const std::string& filename);
+    DefaultLogger(const std::string& filename) : filename_(filename)
+    {
+        fstream_.open(filename_);
+    }
 
     template<typename... Types>
-    void write(const Types&... args)
+    void write_(const Types&... args)
     {
         LockGuard guard(mtx_);
 
@@ -34,6 +37,7 @@ public:
         catch (...) {}
     }
 
+private:
     /* Disabled */
     DefaultLogger(const DefaultLogger &)            = delete;
     DefaultLogger(DefaultLogger &&)                 = delete;

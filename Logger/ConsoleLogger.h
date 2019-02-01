@@ -21,7 +21,7 @@ protected:
         (ostream_ << ... << FormatOutput<std::ostream, Types>(args)) << '\n';
     }
 
-public:
+private:
     /* Disabled */
     ConsoleLogger(const ConsoleLogger &)            = delete;
     ConsoleLogger(ConsoleLogger &&)                 = delete;
