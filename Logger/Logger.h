@@ -11,7 +11,7 @@ private:
 
     static LoggerPtr instance_;
 
-    Logger(const std::string& filename, std::ostream& os = std::clog) : ConsoleLogger(os), DefaultLogger(filename)
+    Logger(const std::string& filename, std::ostream& os) : ConsoleLogger(os), DefaultLogger(filename)
     {
     }
 
@@ -34,6 +34,8 @@ public:
     template<typename... Types>
     static void log(const Types&... args)
     {
+        if (!instance_) throw std::runtime_error("Instance of Logger wasn't create");
+
         instance_->print_(args...);
         instance_->write_(args...);
     }
