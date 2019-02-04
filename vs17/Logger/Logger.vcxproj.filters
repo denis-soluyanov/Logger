@@ -4,7 +4,7 @@
     <ClInclude Include="Utility.h" />
     <ClInclude Include="ConsoleLogger.h" />
     <ClInclude Include="Logger.h" />
-    <ClInclude Include="DefaultLogger.h" />
+    <ClInclude Include="FileLogger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

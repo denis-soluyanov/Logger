@@ -2,31 +2,60 @@
 
 #include "Utility.h"
 #include "ConsoleLogger.h"
-#include "DefaultLogger.h"
+#include "FileLogger.h"
+#include <sstream>
 
-class Logger final : private ConsoleLogger, private DefaultLogger
+class Logger final : private ConsoleLogger, private FileLogger
 {
 private:
     using LoggerPtr = std::unique_ptr<Logger>;
 
     static LoggerPtr instance_;
+    Format           format_;
 
-    Logger(const std::string& filename, std::ostream& os) : ConsoleLogger(os), DefaultLogger(filename)
+    template<typename T>
+    class FormatOutput final
     {
+    private:
+        const T& ref_;
+
+    public:
+        FormatOutput(const T& obj) : ref_(obj) {}
+
+        friend std::ostringstream& operator<<(std::ostringstream& os, const FormatOutput<T>& arg)
+        {
+            os << ' ' << arg.ref_;
+            return os;
+        }
+    };
+
+    Logger(const std::string& filename) : FileLogger(filename) {}
+
+    static void createInstance(const std::string& filename)
+    {
+        instance_ = LoggerPtr(new Logger(filename));
     }
 
-    static void createInstance(const std::string& filename, std::ostream& os)
+    template<typename... Types>
+    std::string formatString(const Types&... args)
     {
-        instance_ = LoggerPtr(new Logger(filename, os));
+        std::ostringstream os;
+
+        if (format_.logTime) {
+            os << '[' << getCurrentTime(format_.timezone) << "]:";
+        }
+
+        (os << ... << FormatOutput(args)) << '\n';
+        return os.str();
     }
 
 public:
-    static void init(const std::string& filename, std::ostream& os = std::clog)
+    static void init(const std::string& filename)
     {
         static std::once_flag isCreated;
 
         if (!instance_)
-            std::call_once(isCreated, createInstance, filename, os);
+            std::call_once(isCreated, createInstance, filename);
         else
             throw std::logic_error("Attempt to create instance of Logger twice");
     }
@@ -36,8 +65,12 @@ public:
     {
         if (!instance_) throw std::runtime_error("Instance of Logger wasn't create");
 
-        instance_->print_(args...);
-        instance_->write_(args...);
+        std::string record = instance_->formatString(args...);
+
+        if (instance_->format_.printInConsole)
+            instance_->print_(record);
+
+        instance_->write_(record);
     }
 
 private:

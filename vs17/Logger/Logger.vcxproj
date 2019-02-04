@@ -166,7 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleLogger.h" />
-    <ClInclude Include="DefaultLogger.h" />
+    <ClInclude Include="FileLogger.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>

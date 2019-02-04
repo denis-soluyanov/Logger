@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <mutex>
-#include "Utility.h"
 
 class ConsoleLogger
 {
@@ -11,14 +10,13 @@ private:
     std::mutex    mtx_;
 
 protected:
-    ConsoleLogger(std::ostream& os) : ostream_(os) {}
+    explicit ConsoleLogger(std::ostream& os = std::clog) : ostream_(os) {}
 
-    template<typename... Types>
-    void print_(const Types&... args)
+    void print_(const std::string& record)
     {
         std::lock_guard<std::mutex> guard(mtx_);
 
-        (ostream_ << ... << FormatOutput<std::ostream, Types>(args)) << '\n';
+        ostream_.write(record.c_str(), record.size());
     }
 
 private:
