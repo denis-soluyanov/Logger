@@ -29,12 +29,7 @@ private:
         }
     };
 
-    Logger(const std::string& filename) : FileLogger(filename) {}
-
-    static void createInstance(const std::string& filename)
-    {
-        instance_ = LoggerPtr(new Logger(filename));
-    }
+    Logger(const std::string& filename, const Format& format) : FileLogger(filename), format_(format) {}
 
     template<typename... Types>
     std::string formatString(const Types&... args)
@@ -49,13 +44,18 @@ private:
         return os.str();
     }
 
+    static void createInstance(const std::string& filename, const Format& format)
+    {
+        instance_ = LoggerPtr(new Logger(filename, format));
+    }
+
 public:
-    static void init(const std::string& filename)
+    static void init(const std::string& filename, const Format& format = Format())
     {
         static std::once_flag isCreated;
 
         if (!instance_)
-            std::call_once(isCreated, createInstance, filename);
+            std::call_once(isCreated, createInstance, filename, format);
         else
             throw std::logic_error("Attempt to create instance of Logger twice");
     }
