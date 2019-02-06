@@ -1,8 +1,10 @@
 ﻿#include <iostream>
-#include "Utility.h"
+#include "Logger.h"
 
 int main()
 {
-    std::cout << getCurrentTime(Timezone::UTC);
+    dlog::Logger::init("test.log");
+    dlog::Logger::log("Hello world!");
+
     return 0;
 }
