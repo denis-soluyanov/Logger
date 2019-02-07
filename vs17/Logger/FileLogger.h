@@ -26,12 +26,13 @@ namespace dlog
 #endif
         }
 
-        void writeFile(const void* buf, size_t len)
+        int writeFile(const void* buf, size_t len) noexcept
         {
+            if (fd_ < 0) return fd_;
 #ifdef _WIN32
-            ::_write(fd_, buf, static_cast<unsigned int>(len));
+            return ::_write(fd_, buf, static_cast<unsigned int>(len));
 #else
-            ::write(fd_, buf, len);
+            return ::write(fd_, buf, len);
 #endif
         }
 
