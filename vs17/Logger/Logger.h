@@ -4,6 +4,7 @@
 #include "ConsoleLogger.h"
 #include "FileLogger.h"
 #include <sstream>
+#include <memory>
 
 namespace dlog
 {
@@ -77,10 +78,10 @@ namespace dlog
 
     private:
         /* Disabled */
-        Logger(const Logger &) = delete;
-        Logger(Logger &&) = delete;
+        Logger(const Logger &)            = delete;
+        Logger(Logger &&)                 = delete;
         Logger& operator=(const Logger &) = delete;
-        Logger& operator=(Logger &&) = delete;
+        Logger& operator=(Logger &&)      = delete;
     };
 
     Logger::LoggerPtr Logger::instance_ = nullptr;
