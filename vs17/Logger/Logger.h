@@ -45,7 +45,10 @@ namespace dlog
             return os.str();
         }
 
-        Logger(const std::string& filename, const Format& format) : FileLogger(filename), format_(format) {}
+        Logger(const std::string& filename, const Format& format) : format_(format)
+        {
+            openFile(filename);
+        }
 
         static void createInstance(const std::string& filename, const Format& format)
         {
@@ -73,7 +76,7 @@ namespace dlog
             if (instance_->format_.printInConsole)
                 instance_->print_(record);
 
-            instance_->write_(record);
+            instance_->writeInFile(record);
         }
 
     private:
