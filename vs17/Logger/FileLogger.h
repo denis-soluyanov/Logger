@@ -34,7 +34,7 @@ namespace dlog
 #ifdef _WIN32
             return ::_lseek(fd_, offset, origin);
 #else
-            return ::lseek(fd_, offset, position);
+            return ::lseek(fd_, offset, origin);
 #endif
         }
 
@@ -83,6 +83,7 @@ namespace dlog
             LockGuard guard(mtx_);
             return write(record.c_str(), record.size());
         }
+
         /* This function returns size of file in bytes */
         off_t getFileSize() noexcept
         {
