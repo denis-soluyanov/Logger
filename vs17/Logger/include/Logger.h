@@ -14,14 +14,13 @@ namespace dlog
         using LoggerPtr = std::unique_ptr<Logger>;
 
         static LoggerPtr instance_;
-        Format           format_;
+        Adapter          adapter_;
 
         template<typename T>
         class FormatOutput final
         {
         private:
             const T& ref_;
-
         public:
             FormatOutput(const T& obj) : ref_(obj) {}
 
@@ -37,43 +36,38 @@ namespace dlog
         {
             std::ostringstream os;
 
-            if (format_.logTime) {
-                os << '[' << getCurrentTime(format_.timezone) << "]:";
+            if (adapter_.logTime) {
+                os << '[' << getCurrentTime(adapter_.time) << "]:";
             }
 
             (os << ... << FormatOutput(args)) << '\n';
             return os.str();
         }
 
-        Logger(const std::string& filename, const Format& format) : format_(format)
-        {
-            openFile(filename);
-        }
+        Logger(const std::string& filename, const Adapter& adapter);
 
-        static void createInstance(const std::string& filename, const Format& format)
-        {
-            instance_ = LoggerPtr(new Logger(filename, format));
-        }
+        static void createInstance(const std::string& filename, const Adapter& adapter);
+
+        template<typename Type>
+        friend void init(const std::string& filename, const Adapter& adapter);
+
+        bool canWrite() noexcept;
 
     public:
-        static void init(const std::string& filename, const Format& format = Format())
-        {
-            static std::once_flag isCreated;
-
-            if (!instance_)
-                std::call_once(isCreated, createInstance, filename, format);
-            else
-                throw std::logic_error("Attempt to create instance of Logger twice");
-        }
 
         template<typename... Types>
         static void log(const Types&... args)
         {
             if (!instance_) throw std::runtime_error("Instance of Logger wasn't create");
 
+            if (instance_->canWrite()) {
+                instance_->print_("Maximum file size reached!\n");
+                return;
+            }
+
             std::string record = instance_->formatString(args...);
 
-            if (instance_->format_.printInConsole)
+            if (instance_->adapter_.printInConsole)
                 instance_->print_(record);
 
             instance_->writeInFile(record);
@@ -87,5 +81,14 @@ namespace dlog
         Logger& operator=(Logger &&)      = delete;
     };
 
-    Logger::LoggerPtr Logger::instance_ = nullptr;
+    template<typename Type = Adapter>
+    void init(const std::string& filename, const Adapter& adapter = Adapter())
+    {
+        static std::once_flag isCreated;
+
+        if (!Logger::instance_)
+            std::call_once(isCreated, Logger::createInstance, filename, adapter);
+        else
+            throw std::logic_error("Attempt to create instance of Logger twice");
+    }
 }
