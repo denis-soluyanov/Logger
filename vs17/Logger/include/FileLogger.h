@@ -22,9 +22,6 @@ namespace dlog
         /* Constructs a new instance of FileLogger without associating with the file */
         FileLogger();
 
-        /* This function close (save) the current file */
-        void closeFile() noexcept;
-
         /*
          * This function opens the file for writing or create new file if it doesn't exists.
          * Function returns 'true' if file was successfully opened.
@@ -32,6 +29,9 @@ namespace dlog
          * will close the current file and then open a new one.
         */
         bool openFile(const std::string& filename) noexcept;
+
+        /* This function close (save) the current file */
+        void closeFile() noexcept;
 
         /*
          * This function writes the 'record' into current open file.

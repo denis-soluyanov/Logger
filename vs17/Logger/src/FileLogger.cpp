@@ -33,6 +33,18 @@ namespace dlog
     {
     }
 
+    bool FileLogger::openFile(const std::string& filename) noexcept
+    {
+        LockGuard guard(mtx_);
+        if (fd_ > 0) closeFile();
+#ifdef _WIN32
+        ::_sopen_s(&fd_, filename.c_str(), _O_CREAT | _O_WRONLY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
+#else
+        fd_ = ::open(filename.c_str(), O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+#endif
+        return (seek(0L, SEEK_END) != -1) ? true : false;
+    }
+
     void FileLogger::closeFile() noexcept
     {
         LockGuard guard(mtx_);
@@ -44,18 +56,6 @@ namespace dlog
 #endif
             fd_ = -1;
         }
-    }
-
-    bool FileLogger::openFile(const std::string& filename) noexcept
-    {
-        LockGuard guard(mtx_);
-        if (fd_ > 0) closeFile();
-#ifdef _WIN32
-        ::_sopen_s(&fd_, filename.c_str(), _O_CREAT | _O_WRONLY, _SH_DENYWR, _S_IREAD | _S_IWRITE);
-#else
-        fd_ = ::open(filename.c_str(), O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-#endif
-        return (seek(0L, SEEK_END) != -1) ? true : false;
     }
 
     int FileLogger::writeInFile(const std::string& record) noexcept
