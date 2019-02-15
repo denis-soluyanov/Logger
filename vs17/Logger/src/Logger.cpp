@@ -1,4 +1,4 @@
-﻿#include "Logger.h"
+﻿#include "dlog/Logger.h"
 
 namespace dlog
 {
@@ -21,4 +21,3 @@ namespace dlog
 
     Logger::LoggerPtr Logger::instance_ = nullptr;
 }
-
