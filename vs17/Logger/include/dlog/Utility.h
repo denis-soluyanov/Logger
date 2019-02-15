@@ -65,12 +65,12 @@ namespace dlog
 
 namespace dlog {
 inline namespace size_literals {
-    constexpr uint64_t operator "" _B(uint64_t val)
+    constexpr uint64_t operator "" _B(unsigned long long val)
     {// returns number of bytes
         return val;
     }
 
-    constexpr uint64_t operator "" _KB(uint64_t val)
+    constexpr uint64_t operator "" _KB(unsigned long long val)
     {// takes number of kilobytes and converts it into bytes
         return (val * 1024);
     }

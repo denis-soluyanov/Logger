@@ -48,12 +48,17 @@ namespace dlog
 
         static void createInstance(const std::string& filename, const Adapter& adapter);
 
-        template<typename Type>
-        friend void init(const std::string& filename, const Adapter& adapter);
-
         bool canWrite() noexcept;
 
     public:
+        /* 
+         * These functions initialize the instance of Logger.
+         * You can call one of these function only once, second call will throw an exception.
+         */
+        static void init(const std::string& filename, uint64_t maxFileSize = 0, bool printInConsole = false);
+
+        /* Use this function for custom initialization. */
+        static void init(const std::string& filename, const Adapter& adapter);
 
         template<typename... Types>
         static void log(const Types&... args)
@@ -80,15 +85,4 @@ namespace dlog
         Logger& operator=(const Logger &) = delete;
         Logger& operator=(Logger &&)      = delete;
     };
-
-    template<typename Type = Adapter>
-    void init(const std::string& filename, const Adapter& adapter = Adapter())
-    {
-        static std::once_flag isCreated;
-
-        if (!Logger::instance_)
-            std::call_once(isCreated, Logger::createInstance, filename, adapter);
-        else
-            throw std::logic_error("Attempt to create instance of Logger twice");
-    }
 }

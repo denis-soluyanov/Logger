@@ -3,7 +3,7 @@
 
 int main()
 {
-    dlog::init("Hello_World.log");
+    dlog::Logger::init("Hello_World.log");
 
     dlog::Logger::log("*****************************");
     for (int i = 0; i < 50; ++i) {
