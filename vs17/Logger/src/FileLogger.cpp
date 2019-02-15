@@ -1,10 +1,12 @@
-﻿#include "FileLogger.h"
+﻿#include "dlog/FileLogger.h"
 #include <fcntl.h>
 
 #ifdef _WIN32
 #include <io.h>
+#include <direct.h>
 #else
 #include <unistd.h>
+#include <sys/stat.h>
 #endif
 
 namespace dlog
@@ -68,6 +70,17 @@ namespace dlog
     {
         LockGuard guard(mtx_);
         return seek(0L, SEEK_END);
+    }
+
+    bool FileLogger::makeDir(const std::string& dir) noexcept
+    {
+        if (dir.empty()) return false;
+
+#ifdef _WIN32
+        return (_mkdir(dir.c_str()) == 0) ? true : false;
+#else
+        return (mkdir(dir.c_str(), S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH) == 0) ? true : false;
+#endif
     }
 
     FileLogger::~FileLogger()

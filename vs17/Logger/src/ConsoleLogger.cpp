@@ -1,4 +1,4 @@
-﻿#include "ConsoleLogger.h"
+﻿#include "dlog/ConsoleLogger.h"
 
 namespace dlog
 {

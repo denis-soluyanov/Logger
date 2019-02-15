@@ -42,6 +42,9 @@ namespace dlog
         /* This function returns size of file in bytes */
         off_t getFileSize() noexcept;
 
+        /* Creates a new directory passed in 'dir' */
+        bool makeDir(const std::string& dir) noexcept;
+
         /* Destroys the object and close the file descriptor */
         ~FileLogger();
 
