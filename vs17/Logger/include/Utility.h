@@ -30,7 +30,7 @@ namespace dlog
         Time time;                               //
         bool printInConsole      = false;        // Also print message in Console
         uint64_t maxFileSize     = 0;            // Max size of log-file in bytes (if '0' - no limit)
-        bool logFileRotation     = false;        // Enable transfer log-file to backup-folder
+        bool enableFileRotation  = false;        // Enable transfer log-file to backup-folder
         std::string backupFolder = "./backlogs"; // Folder for old log-files
     };
 
@@ -66,22 +66,22 @@ namespace dlog
 namespace dlog {
 inline namespace size_literals {
     constexpr uint64_t operator "" _B(uint64_t val)
-    {
+    {// returns number of bytes
         return val;
     }
 
     constexpr uint64_t operator "" _KB(uint64_t val)
-    {
+    {// takes number of kilobytes and converts it into bytes
         return (val * 1024);
     }
 
     constexpr uint64_t operator "" _MB(long double val)
-    {
+    {// takes number of megabytes and converts it into bytes
         return static_cast<uint64_t>(val * 1024 * 1024);
     }
 
     constexpr uint64_t operator "" _GB(long double val)
-    {
+    {// takes number of gigabytes and converts it into bytes
         return static_cast<uint64_t>(val * 1024 * 1024 * 1024);
     }
 }
